@@ -12,10 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Read build manifest
+      - name: Read build manifest and set as env var
         id: manifest
         run: |
-          echo "MANIFEST=$(cat build-manifest.json)" >> $GITHUB_ENV
+          echo "MANIFEST=$(jq -r tostring build-manifest.json)" >> $GITHUB_ENV
 
       - name: Trigger reusable workflow for build
         uses: actions/github-script@v6
