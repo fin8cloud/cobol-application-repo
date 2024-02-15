@@ -18,17 +18,17 @@ jobs:
     - name: Read build manifest and trigger builds
       run: |
         jq -c '.programs[] | select(.build == true)' build-manifest.json | while IFS= read -r program; do
-        name=$(echo "$program" | jq -r '.name')
-        path=$(echo "$program" | jq -r '.path')
-        version=$(echo "$program" | jq -r '.version')
-        copybookTag=$(echo "$program" | jq -r '.copybookTag')
-      
-        if [[ $path == batch/* ]]; then
-          echo "Building batch program: $name, Version: $version, Copybook Tag: $copybookTag"
-          # Here we would trigger the batch build process, for now we just print
-        elif [[ $path == online/* ]]; then
-          echo "Building online program: $name, Version: $version, Copybook Tag: $copybookTag"
-          # Here we would trigger the online build process, for now we just print
-        fi
-      done
+          name=$(echo "$program" | jq -r '.name')
+          path=$(echo "$program" | jq -r '.path')
+          version=$(echo "$program" | jq -r '.version')
+          copybookTag=$(echo "$program" | jq -r '.copybookTag')
+        
+          if [[ $path == batch/* ]]; then
+            echo "Building batch program: $name, Version: $version, Copybook Tag: $copybookTag"
+            # Here we would trigger the batch build process, for now we just print
+          elif [[ $path == online/* ]]; then
+            echo "Building online program: $name, Version: $version, Copybook Tag: $copybookTag"
+            # Here we would trigger the online build process, for now we just print
+          fi
+        done
     
