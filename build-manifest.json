@@ -12,7 +12,7 @@
         "path": "online/ONLINE_PROGRAM.cbl",
         "version": "1.0",
         "copybookTag": "v1.0",
-        "build": true
+        "build": false
       }
     ]
   }
