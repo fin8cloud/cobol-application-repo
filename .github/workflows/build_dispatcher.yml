@@ -32,7 +32,7 @@ jobs:
 
           echo "Dispatching build for $name"
           curl -X POST \
-          -H "Authorization: token ${{ secrets.YOUR_PAT_SECRET_NAME }}" \
+          -H "Authorization: token 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" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/fin8cloud/cobol-workflows-repo/actions/workflows/$workflow_file/dispatches \
           -d '{"ref":"main","inputs":{"program_name":"'"$name"'","program_version":"'"$version"'","copybook_tag":"'"$copybookTag"'"}}'
