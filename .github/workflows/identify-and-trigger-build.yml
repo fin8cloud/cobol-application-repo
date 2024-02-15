@@ -22,9 +22,9 @@ jobs:
         with:
           script: |
             const manifest = JSON.parse(process.env.MANIFEST);
-            manifest.programs.forEach(program => {
+            manifest.programs.forEach(async program => {
               if (program.build) {
-                const payload = {
+                await github.rest.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
                   repo: 'cobol-workflows-repo',
                   workflow_id: 'build-program.yml',
@@ -34,8 +34,6 @@ jobs:
                     'program_version': program.version,
                     'copybook_tag': program.copybookTag
                   }
-                };
-                github.actions.createWorkflowDispatch(payload);
+                }).catch(error => console.error("Failed to dispatch workflow:", error));
               }
             });
-
