@@ -1,34 +1,41 @@
 name: Build On Demand
 
-on: 
+on:
   push:
     paths:
       - 'build-manifest.json'
 
 jobs:
-  build:
+  trigger-builds:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v2
 
     - name: Install jq
       run: sudo apt-get install jq
 
-    - name: Read build manifest and trigger builds
+    - name: Determine which programs to build
       run: |
         jq -c '.programs[] | select(.build == true)' build-manifest.json | while IFS= read -r program; do
           name=$(echo "$program" | jq -r '.name')
           path=$(echo "$program" | jq -r '.path')
           version=$(echo "$program" | jq -r '.version')
           copybookTag=$(echo "$program" | jq -r '.copybookTag')
-        
+          echo "::set-output name=name::$name"
+          echo "::set-output name=version::$version"
+          echo "::set-output name=copybookTag::$copybookTag"
+          echo "::set-output name=path::$path"
+
           if [[ $path == batch/* ]]; then
-            echo "Building batch program: $name, Version: $version, Copybook Tag: $copybookTag"
-            # Here we would trigger the batch build process, for now we just print
+            program_type="batch"
           elif [[ $path == online/* ]]; then
-            echo "Building online program: $name, Version: $version, Copybook Tag: $copybookTag"
-            # Here we would trigger the online build process, for now we just print
+            program_type="online"
           fi
+          echo "::set-output name=program_type::$program_type"
+
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${program_type}-build.yml/dispatches" \
+          -d '{"ref":"main","inputs":{"name":"'$name'","version":"'$version'","copybookTag":"'$copybookTag'"}}'
         done
-    
+      id: trigger

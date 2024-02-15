@@ -1,0 +1,22 @@
+name: Batch Build Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        required: true
+        description: 'Program Name'
+      version:
+        required: true
+        description: 'Program Version'
+      copybookTag:
+        required: true
+        description: 'Copybook Tag'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print Program Build Information
+      run: |
+        echo "Building batch program: ${{ github.event.inputs.name }}, Version: ${{ github.event.inputs.version }}, Copybook Tag: ${{ github.event.inputs.copybookTag }}"
