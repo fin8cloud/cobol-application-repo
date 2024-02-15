@@ -1,19 +1,18 @@
 {
-    "programs": [
-      {
-        "name": "BATCH_PROGRAM",
-        "path": "batch/BATCH_PROGRAM.cbl",
-        "version": "1.0",
-        "copybookTag": "v1.0",
-        "build": false
-      },
-      {
-        "name": "ONLINE_PROGRAM",
-        "path": "online/ONLINE_PROGRAM.cbl",
-        "version": "1.0",
-        "copybookTag": "v1.0",
-        "build": true
-      }
-    ]
-  }
-  
+  "programs": [
+    {
+      "name": "BATCH_PROGRAM",
+      "path": "batch/BATCH_PROGRAM.cbl",
+      "version": "1.0",
+      "copybookTag": "v1.0",
+      "build": false
+    },
+    {
+      "name": "ONLINE_PROGRAM",
+      "path": "online/ONLINE_PROGRAM.cbl",
+      "version": "1.0",
+      "copybookTag": "v1.0",
+      "build": false
+    }
+  ]
+}
