@@ -1,0 +1,41 @@
+name: Identify and Trigger Build
+
+on:
+  push:
+    paths:
+      - 'build-manifest.json'
+
+jobs:
+  trigger-builds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Read build manifest
+        id: manifest
+        run: |
+          echo "MANIFEST=$(cat build-manifest.json)" >> $GITHUB_ENV
+
+      - name: Trigger reusable workflow for build
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const manifest = JSON.parse(process.env.MANIFEST);
+            manifest.programs.forEach(program => {
+              if (program.build) {
+                const payload = {
+                  owner: context.repo.owner,
+                  repo: 'cobol-workflows-repo',
+                  workflow_id: 'build-program.yml',
+                  ref: 'main',
+                  inputs: {
+                    'program_name': program.name,
+                    'program_version': program.version,
+                    'copybook_tag': program.copybookTag
+                  }
+                };
+                github.actions.createWorkflowDispatch(payload);
+              }
+            });
+
