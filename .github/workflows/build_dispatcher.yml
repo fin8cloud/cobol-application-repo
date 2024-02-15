@@ -16,6 +16,8 @@ jobs:
       run: sudo apt-get install jq
 
     - name: Dispatch builds
+      env:
+        GITHUB_TOKEN: ${{ secrets.MY_PAT }}
       run: |
         jq -c '.programs[] | select(.build==true)' build-manifest.json | while read -r program; do
           name=$(echo $program | jq -r '.name')
@@ -32,7 +34,7 @@ jobs:
 
           echo "Dispatching build for $name"
           curl -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/fin8cloud/cobol-workflows-repo/actions/workflows/$workflow_file/dispatches \
           -d '{"ref":"main","inputs":{"program_name":"'"$name"'","program_version":"'"$version"'","copybook_tag":"'"$copybookTag"'"}}'
